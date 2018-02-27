@@ -1,25 +1,25 @@
+<% p('proxies').each do |a| %>
 <%
   backends = nil
+  # Did link checking break now that we are in the proxies loop?
   if_link("backend") do |backend|
     backends = backend.instances.map {|instance| instance.address}
   end
   unless backends
-    backends = p('backends')
+    backends = a['backends']
   end
-
   backends.map! do |backend|
     # FIXME: this doesn't work for IPv6 addresses
     if backend.include? ':'
       backend
     else
-      "#{backend}:#{p('default_backend_port')}"
+      "#{backend}:#{a['default_backend_port'] || 80}"
     end
   end
 %>
-
-<%= p('hostname') %> {
-  limits <%= p('upload_limit') %>
-  log / /var/vcap/sys/log/proxy/access.log "{combined} {scheme}"
+<%= a['hostname'] %> {
+  <% if a['upload_limit'] %>limits <%= a['upload_limit'] %><% end %>
+  log / /var/vcap/sys/log/proxy/access.log "{combined} {scheme} {host}"
 
   proxy / <%= backends.join(' ') %> {
     header_upstream Host {host}
@@ -29,13 +29,14 @@
     header_downstream X-XSS-Protection "1; mode=block"
     header_downstream X-Content-Type-Options "nosniff"
     header_downstream Strict-Transport-Security "max-age=31536000;"
-    header_downstream Referrer-Policy "<%= p('headers.referrer_policy') %>"
-    <% if p('websocket') %>websocket<% end %>
-    <% if p('insecure_skip_verify') %>insecure_skip_verify<% end %>
+    header_downstream Referrer-Policy "<%= a['headers.referrer_policy'] || "strict-origin-when-cross-origin" %>"
+    <% if a['websocket'] %>websocket<% end %>
+    <% if a['insecure_skip_verify'] %>insecure_skip_verify<% end %>
   }
 
   tls {
-    ca <%= p('acme_url') %>
+    ca <%= a['acme_url'] || "https://acme-staging.api.letsencrypt.org/directory" %>
     protocols tls1.2
   }
 }
+<% end %>

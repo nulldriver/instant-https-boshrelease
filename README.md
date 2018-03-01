@@ -41,12 +41,29 @@ instance_groups:
       - name: proxy
         release: instant-https
         properties:
-          hostname: dashboard.example.com
           contact_email: webmaster@example.com
-          # Set this for real production certificates:
-          # acme_url: https://acme-v01.api.letsencrypt.org/directory
-          backends:
-            - "192.168.0.1:8000"  # Host and port of existing dashboard
+          proxies:
+            - hostname: dashboard.example.com
+              # Set this for real production certificates:
+              # acme_url: https://acme-v01.api.letsencrypt.org/directory
+              backends:
+                - "http://192.168.0.1:8000"  # Host and port of existing dashboard
+              # Indicates this proxy is forwarding WebSocket connections, defaults to false
+              websocket: true
+            - hostname: service-a.example.com
+              # Set this for real production certificates:
+              # acme_url: https://acme-v01.api.letsencrypt.org/directory
+              backends:
+                - "https://192.168.0.2:443"  # Host and port of existing service
+              # overrides verification of the backend TLS certificate, defaults to false
+              insecure_skip_verify: true
+            - hostname: service-b.example.com
+              # Set this for real production certificates:
+              # acme_url: https://acme-v01.api.letsencrypt.org/directory
+              backends:
+                - "https://192.168.0.3:443"  # Host and port of existing service
+              # overrides verification of the backend TLS certificate, defaults to false
+              insecure_skip_verify: true
     vm_type: default
     stemcell: default
 
@@ -96,12 +113,15 @@ instance_groups:
       - name: proxy  # Add and configure the proxy job
         release: instant-https
         properties:
-          hostname: dashboard.example.com
           contact_email: webmaster@example.com
-          # Set this for real production certificates:
-          # acme_url: https://acme-v01.api.letsencrypt.org/directory
-          backends:
-            - "127.0.0.1:8000"
+          proxies:
+            - hostname: dashboard.example.com
+              # Set this for real production certificates:
+              # acme_url: https://acme-v01.api.letsencrypt.org/directory
+              backends:
+                - "http://127.0.0.1:8000"  # Host and port of existing dashboard
+              # Indicates this proxy is forwarding WebSocket connections, defaults to false
+              websocket: true
     vm_type: default
     stemcell: default
 
@@ -114,6 +134,8 @@ update:
 
 ### Links Support
 BOSH 2.0 links are also supported.  The `proxy` optionally consumes a link of type `conn`, named `backend`.  See [the BOSH links docs](https://bosh.io/docs/links.html) for more information.
+
+> **NOTE:** I'm pretty sure this is broken with the changes made to support multiple proxies!!  Need to fix the code and then update these docs accordingly.
 
 ```yaml
 instance_groups:

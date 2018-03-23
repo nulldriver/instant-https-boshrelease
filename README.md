@@ -43,21 +43,25 @@ instance_groups:
         properties:
           contact_email: webmaster@example.com
           proxies:
-            - hostname: dashboard.example.com
+            - hostnames:
+                - dashboard.example.com
               # Set this for real production certificates:
               # acme_url: https://acme-v01.api.letsencrypt.org/directory
               backends:
                 - "http://192.168.0.1:8000"  # Host and port of existing dashboard
               # Indicates this proxy is forwarding WebSocket connections, defaults to false
               websocket: true
-            - hostname: service-a.example.com
+            - hostnames:
+                - service-a.example.com
+                - service-a-canary.example.com
               # Set this for real production certificates:
               # acme_url: https://acme-v01.api.letsencrypt.org/directory
               backends:
                 - "https://192.168.0.2:443"  # Host and port of existing service
               # overrides verification of the backend TLS certificate, defaults to false
               insecure_skip_verify: true
-            - hostname: service-b.example.com
+            - hostnames:
+                - service-b.example.com
               # Set this for real production certificates:
               # acme_url: https://acme-v01.api.letsencrypt.org/directory
               backends:
@@ -115,7 +119,7 @@ instance_groups:
         properties:
           contact_email: webmaster@example.com
           proxies:
-            - hostname: dashboard.example.com
+            - hostnames: [dashboard.example.com]
               # Set this for real production certificates:
               # acme_url: https://acme-v01.api.letsencrypt.org/directory
               backends:

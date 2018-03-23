@@ -17,7 +17,7 @@
     end
   end
 %>
-<%= a['hostname'] %> {
+<%= a['hostnames'].join(' ') %> {
   <% if a['upload_limit'] %>limits <%= a['upload_limit'] %><% end %>
   log / /var/vcap/sys/log/proxy/access.log "{combined} {scheme} {host}"
 

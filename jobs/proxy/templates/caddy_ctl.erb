@@ -24,6 +24,11 @@ case $1 in
     # Increase the file descriptor limit
     ulimit -n 8192
 
+    <% if_p("dns_providers.googlecloud") do |googlecloud| %>
+    export GCE_PROJECT=<%= googlecloud['GCE_PROJECT'] %>
+    export GCE_SERVICE_ACCOUNT_FILE=${JOB_DIR}/config/gce_service_account_file.json
+    <% end %>
+
     exec "${CADDY}" -conf "${JOB_DIR}/config/Caddyfile" -email <%= p('contact_email') %> -agree -pidfile "${PIDFILE}" >> "${LOG_DIR}/caddy.stdout" 2>> "${LOG_DIR}/caddy.stderr"
     ;;
 

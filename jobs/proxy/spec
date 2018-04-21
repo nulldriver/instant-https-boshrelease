@@ -4,6 +4,7 @@ name: proxy
 templates:
   caddy_ctl.erb: bin/caddy_ctl
   Caddyfile.erb: config/Caddyfile
+  gce_service_account_file.json.erb: config/gce_service_account_file.json
 
 packages:
   - caddy
@@ -17,16 +18,35 @@ properties:
   contact_email:
     description: "Contact email address for ACME account"
     example: "hostmaster@example.com"
-  proxies:
-    description: |
-      A list of multiple proxies. Each has the same properties as above. The
-      default value will come from above properties.
+  dns_providers.googlecloud:
+    description: "Google Cloud DNS Environment Variables"
     example:
-    - hostname: example.com
-      acme_url: https://acme-staging.api.letsencrypt.org/directory
+      googlecloud:
+        GCE_PROJECT: some-project-201802 # required - GCE project id
+        GCE_SERVICE_ACCOUNT_FILE: |      # required - GCE service account JSON
+          {
+            "type": "service_account",
+            "project_id": "some-project-201802",
+            "private_key_id": "05cfd9766677a85dd07c33fe52641c52bde6abf7",
+            "private_key": "-----BEGIN PRIVATE KEY-----\nMIIE...k8LA==\n-----END PRIVATE KEY-----\n",
+            "client_email": "instant-https@some-project-201802.iam.gserviceaccount.com",
+            "client_id": "123456789012345678901",
+            "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+            "token_uri": "https://accounts.google.com/o/oauth2/token",
+            "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+            "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/instant-https%40some-project-201802.iam.gserviceaccount.com"
+          }
+  proxies:
+    description: "A list of multiple proxies. Each has the same properties as above. The default value will come from above properties."
+    example:
+    - hostnames: [example.com]
+      acme_url: https://acme-staging-v02.api.letsencrypt.org/directory
       default_backend_port: 80
-      backends: []
+      backends:
+      - "https://10.0.0.10:443"
+      - "https://10.0.0.11:443"
       upload_limit: 100mb
       websocket: false
       insecure_skip_verify: false
       headers.referrer_policy: strict-origin-when-cross-origin
+      dns_provider: googlecloud # required for wildcard certs, must match one of the configured dns_providers

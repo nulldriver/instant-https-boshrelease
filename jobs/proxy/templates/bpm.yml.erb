@@ -1,0 +1,9 @@
+---
+processes:
+- name: proxy
+  executable: /var/vcap/jobs/proxy/bin/proxy-start
+  limits:
+    open_files: 100000
+  persistent_disk: true
+  capabilities:
+  - NET_BIND_SERVICE

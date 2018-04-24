@@ -1,0 +1,15 @@
+#!/bin/bash -e
+
+# Store caddy's certs and private keys in persistent storage
+export CADDYPATH=/var/vcap/store/proxy/caddy
+mkdir -p "$CADDYPATH"
+
+<% if_p("dns_providers.googlecloud") do |googlecloud| %>
+export GCE_PROJECT=<%= googlecloud['GCE_PROJECT'] %>
+export GCE_SERVICE_ACCOUNT_FILE=/var/vcap/jobs/proxy/config/gce_service_account_file.json
+<% end %>
+
+/var/vcap/packages/caddy/bin/caddy \
+  -conf /var/vcap/jobs/proxy/config/Caddyfile \
+  -email "<%= p('contact_email') %>" \
+  -agree

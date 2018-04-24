@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 # Store caddy's certs and private keys in persistent storage
-export CADDYPATH=/var/vcap/store/proxy/caddy
+export CADDYPATH=<%= p('data_dir') %>/caddy
 mkdir -p "$CADDYPATH"
 
 <% if_p("dns_providers.googlecloud") do |googlecloud| %>

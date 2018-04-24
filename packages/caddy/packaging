@@ -1,7 +1,7 @@
 set -eux
 
 # Using the prebuilt binary for this initial version.
-VERSION=0.10.13
+VERSION=0.10.14
 
 # The Caddy tarball breaks convention and extracts to the current directory
 EXTRACT_DIR="caddy_v${VERSION}"

@@ -4,4 +4,4 @@ name: caddy
 dependencies: []
 
 files:
-  - caddy_v0.10.13_linux_amd64.tar.gz  # https://github.com/mholt/caddy/releases/download/v0.10.8/caddy_v0.10.8_linux_amd64.tar.gz
+  - caddy_v0.10.14_linux_amd64.tar.gz  # https://caddyserver.com/download/linux/amd64?plugins=tls.dns.googlecloud&license=personal

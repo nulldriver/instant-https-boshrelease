@@ -1,0 +1,44 @@
+---
+name: instant-https
+
+releases:
+- name: bpm
+  sha1: f2bd126b17b3591160f501d88d79ccf0aba1ae54
+  url: git+https://github.com/cloudfoundry-incubator/bpm-release
+  version: 0.5.0
+- name: instant-https
+  version: latest
+
+stemcells:
+- alias: default
+  os: ubuntu-trusty
+  version: 3468.latest
+
+addons:
+- jobs:
+  - name: bpm
+    release: bpm
+  name: bpm
+
+instance_groups:
+- name: https_proxy
+  azs: [z1]
+  instances: 1
+  vm_type: micro
+  stemcell: default
+  persistent_disk: 10240
+  networks:
+  - name: default
+  jobs:
+  - name: proxy
+    release: instant-https
+    properties:
+      contact_email: ((contact_email))
+      dns_providers: ((dns_providers))
+      caddyfile: ((caddyfile))
+
+update:
+  canaries: 1
+  canary_watch_time: 1000-60000
+  max_in_flight: 1
+  update_watch_time: 1000-60000

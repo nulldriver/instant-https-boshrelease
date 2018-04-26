@@ -11,5 +11,9 @@ export GCE_SERVICE_ACCOUNT_FILE=/var/vcap/jobs/proxy/config/gce_service_account_
 
 /var/vcap/packages/caddy/bin/caddy \
   -conf /var/vcap/jobs/proxy/config/Caddyfile \
+  -validate
+
+/var/vcap/packages/caddy/bin/caddy \
+  -conf /var/vcap/jobs/proxy/config/Caddyfile \
   -email "<%= p('contact_email') %>" \
   -agree

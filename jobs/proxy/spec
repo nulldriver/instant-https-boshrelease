@@ -38,17 +38,44 @@ properties:
             "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
             "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/instant-https%40some-project-201802.iam.gserviceaccount.com"
           }
-  proxies:
-    description: "A list of multiple proxies. Each has the same properties as above. The default value will come from above properties."
-    example:
-    - hostnames: [example.com]
-      acme_url: https://acme-staging-v02.api.letsencrypt.org/directory
-      default_backend_port: 80
-      backends:
-      - "https://10.0.0.10:443"
-      - "https://10.0.0.11:443"
-      upload_limit: 100mb
-      websocket: false
-      insecure_skip_verify: false
-      headers.referrer_policy: strict-origin-when-cross-origin
-      dns_provider: googlecloud # required for wildcard certs, must match one of the configured dns_providers
+  caddyfile:
+    description: "Contents of a Caddyfile"
+      example:
+        caddyfile: |
+          opsman.example.com {
+            log / /var/vcap/sys/log/proxy/opsman.access.log "{combined} {scheme} {host}"
+            proxy / https://10.0.0.10:443 {
+              header_upstream Host {host}
+              header_upstream X-Forwarded-Proto {scheme}
+              header_downstream X-Frame-Options "DENY"
+              header_downstream X-XSS-Protection "1; mode=block"
+              header_downstream X-Content-Type-Options "nosniff"
+              header_downstream Strict-Transport-Security "max-age=31536000;"
+              header_downstream Referrer-Policy "strict-origin-when-cross-origin"
+              insecure_skip_verify
+            }
+            tls {
+              ca https://acme-v02.api.letsencrypt.org/directory
+              protocols tls1.2
+            }
+          }
+
+          *.cfapps.example.com *.run.example.com *.login.run.example.com *.uaa.run.example.com {
+            log / /var/vcap/sys/log/proxy/pas.access.log "{combined} {scheme} {host}"
+            proxy / https://10.0.0.12:443 {
+              header_upstream Host {host}
+              header_upstream X-Forwarded-Proto {scheme}
+              header_downstream X-Frame-Options "DENY"
+              header_downstream X-XSS-Protection "1; mode=block"
+              header_downstream X-Content-Type-Options "nosniff"
+              header_downstream Strict-Transport-Security "max-age=31536000;"
+              header_downstream Referrer-Policy "strict-origin-when-cross-origin"
+              websocket
+              insecure_skip_verify
+            }
+            tls {
+              ca https://acme-v02.api.letsencrypt.org/directory
+              protocols tls1.2
+              dns googlecloud
+            }
+          }

@@ -3,9 +3,10 @@ name: proxy
 
 templates:
   bpm.yml.erb: config/bpm.yml
-  proxy-start.erb: bin/proxy-start
   Caddyfile.erb: config/Caddyfile
   gce_service_account_file.json.erb: config/gce_service_account_file.json
+  pre-start.erb: bin/pre-start
+  proxy-start.erb: bin/proxy-start
 
 packages:
   - caddy

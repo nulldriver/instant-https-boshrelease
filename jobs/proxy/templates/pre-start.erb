@@ -1,0 +1,4 @@
+#!/bin/bash -e
+
+sysctl -e -w net.ipv4.tcp_fin_timeout=10
+sysctl -e -w net.ipv4.tcp_tw_reuse=1

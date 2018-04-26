@@ -19,9 +19,6 @@ properties:
   contact_email:
     description: "Contact email address for ACME account"
     example: "hostmaster@example.com"
-  data_dir:
-    description: "Directory storing certs and private keys. If using persistent storage, change this to /var/vcap/store/proxy"
-    default: /var/vcap/data/proxy
   dns_providers.googlecloud:
     description: "Google Cloud DNS Environment Variables"
     example:

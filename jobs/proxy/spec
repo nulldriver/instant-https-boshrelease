@@ -40,42 +40,42 @@ properties:
           }
   caddyfile:
     description: "Contents of a Caddyfile"
-      example:
-        caddyfile: |
-          opsman.example.com {
-            log / /var/vcap/sys/log/proxy/opsman.access.log "{combined} {scheme} {host}"
-            proxy / https://10.0.0.10:443 {
-              header_upstream Host {host}
-              header_upstream X-Forwarded-Proto {scheme}
-              header_downstream X-Frame-Options "DENY"
-              header_downstream X-XSS-Protection "1; mode=block"
-              header_downstream X-Content-Type-Options "nosniff"
-              header_downstream Strict-Transport-Security "max-age=31536000;"
-              header_downstream Referrer-Policy "strict-origin-when-cross-origin"
-              insecure_skip_verify
-            }
-            tls {
-              ca https://acme-v02.api.letsencrypt.org/directory
-              protocols tls1.2
-            }
+    example:
+      caddyfile: |
+        opsman.example.com {
+          log / /var/vcap/sys/log/proxy/opsman.access.log "{combined} {scheme} {host}"
+          proxy / https://10.0.0.10:443 {
+            header_upstream Host {host}
+            header_upstream X-Forwarded-Proto {scheme}
+            header_downstream X-Frame-Options "DENY"
+            header_downstream X-XSS-Protection "1; mode=block"
+            header_downstream X-Content-Type-Options "nosniff"
+            header_downstream Strict-Transport-Security "max-age=31536000;"
+            header_downstream Referrer-Policy "strict-origin-when-cross-origin"
+            insecure_skip_verify
           }
+          tls {
+            ca https://acme-v02.api.letsencrypt.org/directory
+            protocols tls1.2
+          }
+        }
 
-          *.cfapps.example.com *.run.example.com *.login.run.example.com *.uaa.run.example.com {
-            log / /var/vcap/sys/log/proxy/pas.access.log "{combined} {scheme} {host}"
-            proxy / https://10.0.0.12:443 {
-              header_upstream Host {host}
-              header_upstream X-Forwarded-Proto {scheme}
-              header_downstream X-Frame-Options "DENY"
-              header_downstream X-XSS-Protection "1; mode=block"
-              header_downstream X-Content-Type-Options "nosniff"
-              header_downstream Strict-Transport-Security "max-age=31536000;"
-              header_downstream Referrer-Policy "strict-origin-when-cross-origin"
-              websocket
-              insecure_skip_verify
-            }
-            tls {
-              ca https://acme-v02.api.letsencrypt.org/directory
-              protocols tls1.2
-              dns googlecloud
-            }
+        *.cfapps.example.com *.run.example.com *.login.run.example.com *.uaa.run.example.com {
+          log / /var/vcap/sys/log/proxy/pas.access.log "{combined} {scheme} {host}"
+          proxy / https://10.0.0.12:443 {
+            header_upstream Host {host}
+            header_upstream X-Forwarded-Proto {scheme}
+            header_downstream X-Frame-Options "DENY"
+            header_downstream X-XSS-Protection "1; mode=block"
+            header_downstream X-Content-Type-Options "nosniff"
+            header_downstream Strict-Transport-Security "max-age=31536000;"
+            header_downstream Referrer-Policy "strict-origin-when-cross-origin"
+            websocket
+            insecure_skip_verify
           }
+          tls {
+            ca https://acme-v02.api.letsencrypt.org/directory
+            protocols tls1.2
+            dns googlecloud
+          }
+        }

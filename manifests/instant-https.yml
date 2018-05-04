@@ -2,10 +2,10 @@
 name: instant-https
 
 releases:
-- name: bpm
-  sha1: f2bd126b17b3591160f501d88d79ccf0aba1ae54
-  url: git+https://github.com/cloudfoundry-incubator/bpm-release
-  version: 0.5.0
+- name: "bpm"
+  version: "0.6.0"
+  url: "https://bosh.io/d/github.com/cloudfoundry-incubator/bpm-release?v=0.6.0"
+  sha1: "4f0f239abdc801d71de9063625aa56e3c42634b5"
 - name: instant-https
   version: latest
 

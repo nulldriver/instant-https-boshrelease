@@ -3,6 +3,7 @@ name: proxy
 
 templates:
   bpm.yml.erb: config/bpm.yml
+  caddy_ctl.erb: bin/caddy_ctl
   Caddyfile.erb: config/Caddyfile
   gce_service_account_file.json.erb: config/gce_service_account_file.json
   pre-start.erb: bin/pre-start
@@ -17,6 +18,9 @@ consumes:
     optional: true
 
 properties:
+  bpm.enabled:
+    description: "Enable Bosh Process Manager"
+    default: false
   contact_email:
     description: "Contact email address for ACME account"
     example: "hostmaster@example.com"

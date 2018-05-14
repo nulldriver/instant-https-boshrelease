@@ -1,7 +1,5 @@
 name: instant-https
 blobstore:
-  provider: s3
+  provider: gcs
   options:
-    bucket_name: dta-instant-https-boshrelease
-    region: ap-southeast-2
-    endpoint: s3.dualstack.ap-southeast-2.amazonaws.com
+    bucket_name: instant-https-boshrelease 
